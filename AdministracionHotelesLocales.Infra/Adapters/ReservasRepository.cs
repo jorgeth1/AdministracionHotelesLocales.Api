@@ -1,4 +1,5 @@
 ﻿using AdministracionHotelesLocales.Domain.Entities;
+using AdministracionHotelesLocales.Domain.Filters;
 using AdministracionHotelesLocales.Domain.Ports.Repositories;
 using AdministracionHotelesLocales.Infra.Ports;
 
@@ -38,9 +39,10 @@ namespace AdministracionHotelesLocales.Infra.Adapters
             await _contactoEmergenciaDataSet.AddAsync(contactoEmergencia);
         }
 
-        public async Task<IEnumerable<Reserva>> FiltrarReservas(DateTime fecha)
+        public async Task<IEnumerable<Reserva>> FiltrarReservas(FiltroConsultaHabitaciones filtroConsultaHabitaciones)
         {
-            return await _reservaDataSet.GetAsync(reserva => reserva.FechaReserva != fecha);
+            return await _reservaDataSet.GetAsync(reserva => reserva.FechaReserva.Date != filtroConsultaHabitaciones.FechaEntrada.Date
+                                                             && reserva.FechaReserva.Date >= DateTime.Now.Date);
         }
     }
 }

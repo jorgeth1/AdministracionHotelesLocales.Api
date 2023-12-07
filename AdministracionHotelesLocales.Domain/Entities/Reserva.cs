@@ -8,6 +8,9 @@ namespace AdministracionHotelesLocales.Domain.Entities
         [Required(ErrorMessage = "La fecha de reserva es obligatoria.")]
         public DateTime FechaReserva { get; set; }
 
+        [Required(ErrorMessage = "La fecha de reserva es obligatoria.")]
+        public DateTime? FechaSalida { get; set; }
+
         [Required(ErrorMessage = "El ID de la habitación es obligatorio.")]
         public Guid HabitacionId { get; set; }
 

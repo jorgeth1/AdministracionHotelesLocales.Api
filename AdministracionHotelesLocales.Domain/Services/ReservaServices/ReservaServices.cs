@@ -1,5 +1,6 @@
 ﻿using AdministracionHotelesLocales.Domain.Entities;
 using AdministracionHotelesLocales.Domain.Exceptions;
+using AdministracionHotelesLocales.Domain.Filters;
 using AdministracionHotelesLocales.Domain.Ports.Repositories;
 using System.Reflection.Metadata.Ecma335;
 
@@ -26,6 +27,7 @@ namespace AdministracionHotelesLocales.Domain.Services.ReservaServices
             var habitacion = await _habitacionesRepository.ObtenerHabitacionPorId(reserva.HabitacionId);
 
             _ = habitacion is null ? throw new AppException("La Habitacion no existe") : false;
+            _ = habitacion.Disponible ? false : throw new AppException("No es posible reservar la habitación");
 
             await _reservasRepository.ReservarHabitacion(reserva);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -33,9 +35,13 @@ namespace AdministracionHotelesLocales.Domain.Services.ReservaServices
             return reserva;
         }
 
-        public async Task<IEnumerable<Reserva>> FiltrarReservasHabitacion(DateTime fecha) 
+        public async Task<IEnumerable<Reserva>> FiltrarReservasPorDisponibilidadFecha(FiltroConsultaHabitaciones filtroConsultaHabitaciones)
         {
-            return await _reservasRepository.FiltrarReservas(fecha);
+            _ = filtroConsultaHabitaciones.FechaEntrada.Date < DateTime.Now.Date
+                || filtroConsultaHabitaciones.FechaSalida.Date <= DateTime.Now.Date
+                ? throw new AppException("La fecha de entrada de reserva no es valida") : false;
+
+            return await _reservasRepository.FiltrarReservas(filtroConsultaHabitaciones);
         }
 
     }

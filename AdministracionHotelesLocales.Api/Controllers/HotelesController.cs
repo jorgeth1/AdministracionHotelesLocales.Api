@@ -1,6 +1,7 @@
 ﻿using AdministracionHotelesLocales.App.Commands.Hotel;
 using AdministracionHotelesLocales.App.Dtos;
 using AdministracionHotelesLocales.App.Queries;
+using AdministracionHotelesLocales.App.Queries.Hoteles;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,9 +17,9 @@ namespace AdministracionHotelesLocales.Api.Controllers
         public HotelesController(IMediator mediator) => _mediator = mediator;
 
 
-        //[HttpGet]
-        //public async Task<IEnumerable<HotelDto>> ListarHoteles()
-        //    => await _mediator.Send(new ListarHotelesQuery());
+        [HttpGet]
+        public async Task<IEnumerable<HotelDto>> ListarHoteles()
+            => await _mediator.Send(new ListarHotelesQuery());
 
         [HttpPost]
         public async Task<HotelDto> CrearHotel([FromBody] CrearHotelCommand crearHotelCommand)

@@ -16,9 +16,12 @@ namespace AdministracionHotelesLocales.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost("filtrar-por-fecha")]
-        public async Task<IEnumerable<HabitacionDto>> RealizarReserva([FromBody] FiltrarReservasQuery realizarReservaCommand)
-            => await _mediator.Send(realizarReservaCommand);
+        [HttpGet("filtrar-por-fecha")]
+        public async Task<IEnumerable<HabitacionDto>> RealizarReserva([FromQuery] DateTime fechaEntrada,
+            [FromQuery] DateTime FechaSalida,
+            [FromQuery] int cantidadPersonas,
+            [FromQuery] string ciudad)
+            => await _mediator.Send(new FiltrarReservasQuery(fechaEntrada, FechaSalida, cantidadPersonas, ciudad));
 
         [HttpPost]
         public async Task<ReservaDto> RealizarReserva([FromBody] RealizarReservaCommand realizarReservaCommand)
